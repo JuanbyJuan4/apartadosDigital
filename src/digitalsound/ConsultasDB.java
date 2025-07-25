@@ -12,7 +12,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import java.util.ArrayList;
 import java.sql.SQLException;
@@ -261,7 +264,21 @@ public class ConsultasDB extends javax.swing.JFrame {
                         hoja.getRow(currentRow).createCell(i).setCellValue(resultados.getString(activeParams[i]));
                 }
             }
-            FileOutputStream archivo = new FileOutputStream("C:\\Users\\migue\\OneDrive\\Documentos\\NetBeansProjects\\ApartadoDigitalv9\\ArchivosExcel\\"+filename+".xlsx");
+            
+            // Obtiene la direccion actual del proyecto
+            Path currentRelativePath = Paths.get("");
+            String pathActual = currentRelativePath.toAbsolutePath().toString();
+            
+            // Verifica si existe una direccion Archivos Exce, dentro del directorio actual
+            File dirExcel = new File (pathActual+"\\ArchivosExcel");
+            
+            if(!dirExcel.exists()){
+                dirExcel.mkdirs(); //Si no existe lo crea 
+                System.out.println("Cree un nuevo directorio, porque no existia Archivos Excel");
+            }
+            
+            System.out.println("Direccion actual: "+ dirExcel);
+            FileOutputStream archivo = new FileOutputStream(dirExcel.getAbsolutePath()+"\\"+filename+".xlsx");
             workbook.write(archivo);
             archivo.close();
             message = "Se completo de forma exitosa el proceso";
